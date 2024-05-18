@@ -1,3 +1,29 @@
+[tool.poetry]
+name = "word2image-woai"
+version = "0.1.0"
+description = "Text Generation and Inpainting with Deep Learning This project integrates state-of-the-art deep learning models to perform comprehensive text detection, correction, and inpainting on input images. Utilizing models such as Idefics for image interpretation, ByT5 for text correction, and Stable Diffusion Inpainting for background restoration, this package provides a robust framework for enhancing and generating artistic images with corrected and contextually accurate text."
+authors = ["Joao Rocha"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+easyocr = "^1.7.1"
+pillow = "^10.3.0"
+torch = "^2.3.0"
+torchvision = "^0.18.0"
+clip = {git = "https://github.com/openai/CLIP.git"}
+diffusers = "^0.27.2"
+transformers = "^4.40.2"
+tensorflow = "^2.6.0"
+loguru = "^0.7.2"
+accelerate = "^0.30.1"
+bitsandbytes = "^0.43.1"
+sentencepiece = "^0.1.96"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.2.0"
+
 [build-system]
-requires = ["setuptools", "wheel"]
-build-backend = "setuptools.build_meta"
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
