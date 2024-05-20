@@ -1,0 +1,625 @@
+diff --git a/LICENSE b/LICENSE
+index 35d9c5e..acea3ac 100644
+--- a/LICENSE
++++ b/LICENSE
+@@ -1,21 +1,78 @@
++## MIT License
++
+ MIT License
+ 
+ Copyright (c) 2024 mrjohnnyrocha
+ 
+-Permission is hereby granted, free of charge, to any person obtaining a copy
+-of this software and associated documentation files (the "Software"), to deal
+-in the Software without restriction, including without limitation the rights
+-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+-copies of the Software, and to permit persons to whom the Software is
+-furnished to do so, subject to the following conditions:
+-
+-The above copyright notice and this permission notice shall be included in all
+-copies or substantial portions of the Software.
+-
+-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+-SOFTWARE.
++Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
++
++The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
++
++THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF, OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
++
++---
++
++## Exclusive Rights License Agreement
++
++**Parties:**
++
++- **Licensor:** WO Holdings
++- **Licensee:** WO Holdings, [licensee name]
++
++**Grant of License:**
++
++Licensor hereby grants Licensee an exclusive, non-transferable, and non-sublicensable license to use, market, and commercialize the W-O model.
++
++**Term:**
++
++The license term shall commence on [insert date] and continue for a period of 2 years, unless terminated earlier in accordance with this agreement.
++
++**License Fee and Royalties:**
++
++Licensee agrees to pay Licensor an upfront license fee of [X] USD and a royalty of 15% on gross revenues generated from the use of the W-O model.
++
++**Confidentiality:**
++
++Licensee agrees to maintain the confidentiality of all proprietary information and not disclose it to any third party.
++
++**Intellectual Property Rights:**
++
++All intellectual property rights in the W-O model remain with Licensor. Licensee shall not modify, reverse engineer, or create derivative works of the W-O model.
++
++**Termination:**
++
++Either party may terminate this agreement upon 30 days written notice if the other party breaches any material term of this agreement.
++
++**Governing Law:**
++
++This agreement shall be governed by and construed in accordance with the laws of [Jurisdiction].
++
++**Signatures:**
++
++Licensor: João Rocha, WO Holdings  
++Licensee: WO Holdings, [licensee name]
++
++---
++
++## Figures
++
++1. **Overall Architecture Workflow**  
++2. **Image Upload and Processing Screen**  
++3. **Text Detection and Bounding Box Visualization**  
++4. **Text Correction Interface**  
++5. **Final Text Refinement and Output Display**  
++
++---
++
++### Additional Legal Compliance and Best Practices
++
++1. **Data Protection and Privacy Compliance:** Ensure that the handling of any data, especially personal data, complies with the General Data Protection Regulation (GDPR) and other relevant data protection laws.
++2. **Export Control Compliance:** Verify that the software and its components comply with export control laws and regulations.
++3. **Open Source License Compliance:** Ensure that any third-party components included in the software are properly licensed and their licenses are adhered to.
++4. **Accessibility Standards:** Adhere to accessibility standards such as the Web Content Accessibility Guidelines (WCAG) to ensure the software is usable by people with disabilities.
++
++For more detailed guidance, consult legal experts or refer to resources such as the [Open Source Initiative](https://opensource.org/) and [Creative Commons](https://creativecommons.org/).
++
++---
++
++This comprehensive description and licensing information ensures clarity, legal compliance, and protection for both the licensor and licensee.
+\ No newline at end of file
+diff --git a/README.md b/README.md
+index 1972698..946a087 100644
+--- a/README.md
++++ b/README.md
+@@ -1 +1,108 @@
+-# text-generation
+\ No newline at end of file
++
++## Text Generation and Inpainting Pipeline
++
++This project provides a comprehensive pipeline for processing images containing text, correcting the text, and generating artistic text using advanced AI models. The pipeline includes functionalities for image loading, text detection, text correction, image inpainting, and text generation in an artistic style.
++
++
++## Installation
++
++Installation
++To set up the project, follow these steps:
++
++Clone the repository:
++
++```bash
++git clone https://github.com/your-repo/text-generation.git
++cd text-generation
++Install dependencies:
++```
++
++
++## Usage
++
++```bash
++poetry install
++Activate the virtual environment:
++```
++
++```bash
++poetry shell
++Usage
++To run the pipeline, use the following command:
++```
++
++```bash
++python main.py <path_to_image> [additional_prompt]
++<path_to_image>: Path to the image file to be processed.
++[additional_prompt] (optional): Additional prompt to describe the image better.
++Example:
++```
++
++```bash
++python main.py "mnt/data/source/example2.webp" "A detailed description of the image."
++```
++
++## Components
++
++The main.py script handles the overall processing flow:
++
++Loads the uploaded image.
++Interprets the image and retrieves a description.
++Detects text using OCR and obtains expanded bounding boxes.
++Corrects the text using the description.
++Inpaints the image to integrate corrected text.
++Generates artistic text based on the additional prompt.
++Saves the final image and artistic text image.
++
++- **EasyOCR**: For text detection in images.
++- **T5 Model**: For correcting the detected text.
++- **Stable Diffusion**: For image inpainting.
++- **DeepFloyd IF**: For generating artistic text.
++
++```bash
++ImageProcessor Class
++load_image(image_path: str) -> Image.Image: Loads an image from the specified path.
++interpret_image(image: Image.Image, additional_prompt: str = "") -> str: Interprets the image and provides a description.
++get_bounding_boxes(image: Image.Image, expansion: int = 5) -> List[Tuple[str, Tuple[int, int, int, int]]]: Detects text and returns expanded bounding boxes.
++correct_text(text: str, description: str, additional_prompt: str) -> str: Corrects the detected text using contextual information.
++compose_image(original_image: Image.Image, corrected_texts: List[str], bounding_boxes: List[Tuple[str, Tuple[int, int, int, int]]]) -> Image.Image: Integrates corrected text back into the image.
++inpaint_image(image: Image.Image, bounding_boxes: List[Tuple[str, Tuple[int, int, int, int]]], corrected_texts: List[str]) -> Image.Image: Inpaints the image to replace text regions with appropriate backgrounds.
++generate_artistic_text(prompt: str) -> Image.Image: Generates artistic text based on the provided prompt.
++```
++## Features
++
++- Comprehensive pipeline for processing images containing text.
++- Advanced AI models for text correction and generation.
++- Image inpainting capabilities.
++
++
++# Copyright
++
++Copyright (c) 2024 mrjohnnyrocha
++
++# License
++
++MIT License
++
++Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to:
++
++- Use
++- Copy
++- Modify
++- Merge
++
++And to permit persons to whom the Software is furnished to do so, subject to the following conditions:
++
++- The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
++
++# Disclaimer
++
++THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
++
++IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
++
++
++## Contributing
++
++Contributions are welcome! Please fork the repository and submit a pull request.
++
+diff --git a/img/__init__.py b/img/__init__.py
+index 55fa13c..614c496 100644
+--- a/img/__init__.py
++++ b/img/__init__.py
+@@ -1,3 +1 @@
+-# img/__init__.py
+-
+-from .core import load_uploaded_image, interpret_image, get_bounding_boxes, compose_image
+\ No newline at end of file
++# img/__init__.py
+\ No newline at end of file
+diff --git a/img/core.py b/img/core.py
+index cdbf8b3..8375b35 100644
+--- a/img/core.py
++++ b/img/core.py
+@@ -1,125 +1,146 @@
+ # img/core.py
+-
+-import sys
+-from loguru import logger
+-import clip
+ import easyocr
+ from PIL import Image, ImageDraw, ImageFont
+-from textblob import TextBlob
+ from typing import List, Tuple
+ import numpy as np
+ import torch
+ from diffusers import StableDiffusionInpaintPipeline
+-from scripts.setup_logging import setup_logging
+-
+-logger.remove()
+-
+-# Configure Loguru to log to standard output and a file
+-logger.add(sys.stdout, level="INFO", format="{time} {level} {message}", backtrace=True, diagnose=True)
+-logger.add("app.log", level="DEBUG", format="{time} {level} {message}", rotation="10 MB")
+-
+-# Example of adding contextual information
+-logger = logger.bind(application="text-generation")
+-
+-
+-def load_uploaded_image(image_path: str) -> Image.Image:
+-    try:
+-        image = Image.open(image_path)
+-        logger.info("Image loaded", extra={"image_path": image_path})
+-        return image
+-    except Exception as e:
+-        logger.error("Failed to load image", extra={"error": str(e)})
+-        raise
+-
+-def interpret_image(image: Image.Image, additional_prompt: str = "") -> str:
+-    try:
+-        model, preprocess = clip.load("ViT-B/32", device="cpu")
+-        image_tensor = preprocess(image).unsqueeze(0).to("cpu")
+-        
+-        if additional_prompt:
+-            prompts = [additional_prompt]
+-        else:
+-            prompts = ["a diagram that describes a graph infrastructure emulating the human brain"]
+-
+-        text_tensor = clip.tokenize(prompts).to("cpu")
+-        with torch.no_grad():
+-            image_features = model.encode_image(image_tensor)
+-            text_features = model.encode_text(text_tensor)
++from transformers import IdeficsForVisionText2Text, IdeficsProcessor, T5Tokenizer, T5ForConditionalGeneration
++from scripts.logging import Logger
++
++logger = Logger()
++logger = logger.start()
++
++class ImageProcessor:
++    def __init__(self):
++        self.device = "cuda" if torch.cuda.is_available() else "cpu"
++        self.model = IdeficsForVisionText2Text.from_pretrained("HuggingFaceM4/idefics-9b-instruct", torch_dtype=torch.float16).to(self.device)
++        self.processor = IdeficsProcessor.from_pretrained("HuggingFaceM4/idefics-9b-instruct")
++
++    def load_image(self, image_path: str) -> Image.Image:
++        try:
++            image = Image.open(image_path)
++            logger.info("Image loaded", extra={"image_path": image_path})
++            return image
++        except Exception as e:
++            logger.error("Failed to load image", extra={"error": str(e)})
++            raise
++
++    def interpret_image(self, image: Image.Image, additional_prompt: str = "") -> str:
++        try:
++            image_tensor = self.processor(images=[image], return_tensors="pt").pixel_values.to(self.device)
++            prompts = [additional_prompt] if additional_prompt else ["Describe this image in detail."]
++            inputs = self.processor(prompts=prompts, return_tensors="pt").to(self.device)
++            generated_ids = self.model.generate(**inputs, pixel_values=image_tensor)
++            description = self.processor.batch_decode(generated_ids, skip_special_tokens=True)[0]
++
++            logger.info("Image interpreted", extra={"description": description})
++            return description
++        except Exception as e:
++            logger.error("Failed to interpret image", extra={"error": str(e)})
++            raise
++
++    def get_bounding_boxes(self, image: Image.Image, expansion: int = 5) -> List[Tuple[str, Tuple[int, int, int, int]]]:
++        try:
++            reader = easyocr.Reader(['en'])
++            image_np = np.array(image)
++            results = reader.readtext(image_np)
+             
+-        similarity = torch.cosine_similarity(image_features, text_features)
+-        description = prompts[similarity.argmax()]
+-        logger.info("Image interpreted", extra={"description": description})
+-        return description
+-    except Exception as e:
+-        logger.error("Failed to interpret image", extra={"error": str(e)})
+-        raise
+-
+-def get_bounding_boxes(image: Image.Image, expansion: int = 5) -> List[Tuple[str, Tuple[int, int, int, int]]]:
+-    try:
+-        reader = easyocr.Reader(['en'])
+-        image_np = np.array(image)
+-        results = reader.readtext(image_np)
+-        
+-        bounding_boxes = [
+-            (
+-                text,
+-                (max(left - expansion, 0), max(top - expansion, 0), min(right + expansion, image_np.shape[1]) - max(left - expansion, 0), min(bottom + expansion, image_np.shape[0]) - max(top - expansion, 0))
++            bounding_boxes = [
++                (
++                    text,
++                    (max(left - expansion, 0), max(top - expansion, 0), min(right + expansion, image_np.shape[1]) - max(left - expansion, 0), min(bottom + expansion, image_np.shape[0]) - max(top - expansion, 0))
++                )
++                for box, text, _ in results
++                for (left, top), (right, bottom) in [(box[0], box[2])]
++            ]
++            logger.info("Bounding boxes detected", extra={"bounding_boxes": bounding_boxes})
++            return bounding_boxes
++        except Exception as e:
++            logger.error("Failed to get bounding boxes", extra={"error": str(e)})
++            raise
++
++    def correct_text(self, text: str, description: str, additional_prompt: str) -> str:
++        try:
++            model_name = "google/byt5-small"
++            tokenizer = T5Tokenizer.from_pretrained(model_name)
++            model = T5ForConditionalGeneration.from_pretrained(model_name)
++            
++            context = f"{description}. {additional_prompt}."
++            input_text = f"Context: '{context}' Correct the following text: '{text}'"
++            
++            inputs = tokenizer(input_text, return_tensors="pt")
++            outputs = model.generate(**inputs)
++            corrected_text = tokenizer.decode(outputs[0], skip_special_tokens=True)
++            
++            logger.info("Text corrected with context", extra={"original_text": text, "corrected_text": corrected_text})
++            return corrected_text
++        except Exception as e:
++            logger.error("Failed to correct text with context", extra={"error": str(e)})
++            raise
++
++    def compose_image(self, original_image: Image.Image, corrected_texts: List[str], bounding_boxes: List[Tuple[str, Tuple[int, int, int, int]]]) -> Image.Image:
++        try:
++            image = original_image.copy()
++            draw = ImageDraw.Draw(image)
++            font = ImageFont.load_default()
++            
++            for (text, (x, y, w, h)), corrected_text in zip(bounding_boxes, corrected_texts):
++                draw.rectangle([x, y, x + w, y + h], fill="white")
++                draw.text((x + w // 10, y + h // 10), corrected_text, font=font, fill="black")
++            
++            logger.info("Image composed with corrected text and white background")
++            return image
++        except Exception as e:
++            logger.error("Failed to compose image", extra={"error": str(e)})
++            raise
++
++    def inpaint_image(self, image: Image.Image, bounding_boxes: List[Tuple[str, Tuple[int, int, int, int]]], corrected_texts: List[str]) -> Image.Image:
++        try:
++            pipe = StableDiffusionInpaintPipeline.from_pretrained("runwayml/stable-diffusion-inpainting", torch_dtype=torch.float16)
++            pipe = pipe.to("cuda" if torch.cuda.is_available() else "cpu")
++            
++            inpainted_image = image.copy()
++            mask = Image.new("L", (image.width, image.height), 0)
++            draw = ImageDraw.Draw(mask)
++            
++            for _, (x, y, w, h) in bounding_boxes:
++                draw.rectangle([x, y, x + w, y + h], fill=255)
++            
++            image_np = np.array(image.convert("RGB")).astype(np.float32) / 255.0
++            mask_np = np.array(mask).astype(np.float32) / 255.0
++            image_tensor = torch.from_numpy(image_np).unsqueeze(0).permute(0, 3, 1, 2)
++            mask_tensor = torch.from_numpy(mask_np).unsqueeze(0).unsqueeze(0)
++            
++            result = pipe(prompt="", image=image_tensor, mask_image=mask_tensor)
++            inpainted_image_np = np.array(result.images[0]).astype(np.uint8)
++            inpainted_image = Image.fromarray(inpainted_image_np).resize(image.size)
++            
++            final_image = Image.composite(
++                inpainted_image,
++                image,
++                Image.fromarray((mask_np * 255).astype(np.uint8)).resize(image.size)
+             )
+-            for box, text, _ in results
+-            for (left, top), (right, bottom) in [(box[0], box[2])]
+-        ]
+-        logger.info("Bounding boxes detected", extra={"bounding_boxes": bounding_boxes})
+-        return bounding_boxes
+-    except Exception as e:
+-        logger.error("Failed to get bounding boxes", extra={"error": str(e)})
+-        raise
+-
+-def correct_text(text: str, description: str) -> str:
+-    try:
+-        blob = TextBlob(text)
+-        corrected_text = str(blob.correct())
+-        logger.info("Text corrected", extra={"original_text": text, "corrected_text": corrected_text})
+-        return corrected_text
+-    except Exception as e:
+-        logger.error("Failed to correct text", extra={"error": str(e)})
+-        raise
+-
+-def inpaint_image(image: Image.Image, bounding_boxes: List[Tuple[str, Tuple[int, int, int, int]]]) -> Image.Image:
+-    try:
+-        pipe = StableDiffusionInpaintPipeline.from_pretrained("runwayml/stable-diffusion-inpainting", torch_dtype=torch.float16)
+-        pipe = pipe.to("cuda" if torch.cuda.is_available() else "cpu")
+-
+-        inpainted_image = image.copy()
+-        mask = Image.new("L", (image.width, image.height), 0)
+-        draw = ImageDraw.Draw(mask)
+-
+-        for _, (x, y, w, h) in bounding_boxes:
+-            draw.rectangle([x, y, x+w, y+h], fill=255)
+-
+-        image_np = np.array(image.convert("RGB")).astype(np.float32) / 255.0
+-        mask_np = np.array(mask).astype(np.float32) / 255.0
+-        image_tensor = torch.from_numpy(image_np).unsqueeze(0).permute(0, 3, 1, 2)
+-        mask_tensor = torch.from_numpy(mask_np).unsqueeze(0).unsqueeze(0)
+-
+-        result = pipe(prompt="", image=image_tensor, mask_image=mask_tensor)
+-        inpainted_image_np = result.images[0].cpu().numpy().astype(np.uint8)
+-        inpainted_image = Image.fromarray(inpainted_image_np)
+-        logger.info("Image inpainted")
+-        return inpainted_image
+-    except Exception as e:
+-        logger.error("Failed to inpaint image", extra={"error": str(e)})
+-        raise
+-
+-def compose_image(original_image: Image.Image, corrected_texts: List[str], bounding_boxes: List[Tuple[str, Tuple[int, int, int, int]]]) -> Image.Image:
+-    try:
+-        image = original_image.copy()
+-        draw = ImageDraw.Draw(image)
+-        font = ImageFont.load_default()
+-        
+-        for (text, (x, y, w, h)), corrected_text in zip(bounding_boxes, corrected_texts):
+-            draw.text((x + w // 10, y + h // 10), corrected_text, font=font, fill="black")
+-        logger.info("Image composed with corrected text")
+-        return image
+-    except Exception as e:
+-        logger.error("Failed to compose image", extra={"error": str(e)})
+-        raise
++            logger.info("Image inpainted with background maintained")
++            return final_image
++        except Exception as e:
++            logger.error("Failed to inpaint image", extra={"error": str(e)})
++            raise
++
++    def generate_artistic_text(self, prompt: str) -> Image.Image:
++        """
++        Generate artistic text using DeepFloyd IF.
++
++        Args:
++            prompt (str): The prompt to generate artistic text.
++
++        Returns:
++            Image.Image: The generated artistic text as an image.
++        """
++        try:
++            text_image = self.if_pipeline(prompt=prompt)["sample"]
++            logger.info("Artistic text generated", extra={"prompt": prompt})
++            return text_image
++        except Exception as e:
++            logger.error("Failed to generate artistic text", extra={"error": str(e)})
++            raise
+diff --git a/main.py b/main.py
+index 263f816..7a167e0 100755
+--- a/main.py
++++ b/main.py
+@@ -1,8 +1,7 @@
+ # main.py
+-
+ import os
+ import sys
+-from img.core import load_uploaded_image, interpret_image, get_bounding_boxes, correct_text, inpaint_image, compose_image
++from img.core import ImageProcessor
+ from PIL import Image
+ from typing import List, Tuple
+ 
+@@ -14,37 +13,44 @@ def process_image(image_path: str, additional_prompt: str = "") -> None:
+         image_path (str): Path to the input image file.
+         additional_prompt (str): Additional prompt to describe the image better.
+     """
++    processor = ImageProcessor()
++
+     # Load the uploaded image
+-    uploaded_image: Image.Image = load_uploaded_image(image_path)
++    uploaded_image: Image.Image = processor.load_image(image_path)
+ 
+     # Interpret the image and get description
+-    description: str = interpret_image(uploaded_image, additional_prompt)
+-    
++    description: str = processor.interpret_image(uploaded_image, additional_prompt)
++    print("Description:", description)
++
+     # Step 2: Detect text using OCR and get expanded bounding boxes
+-    bounding_boxes: List[Tuple[str, Tuple[int, int, int, int]]] = get_bounding_boxes(uploaded_image)
+-    
++    bounding_boxes: List[Tuple[str, Tuple[int, int, int, int]]] = processor.get_bounding_boxes(uploaded_image)
++
+     # Step 3: Correct the text using the description
+-    corrected_texts: List[str] = [correct_text(text, description) for text, _ in bounding_boxes]
+-    
+-    # Step 4: Inpaint the image to fill white rectangles with suitable background
+-    inpainted_image: Image.Image = inpaint_image(uploaded_image, bounding_boxes)
+-    
+-    # Step 5: Integrate corrected text back into the image
+-    final_image: Image.Image = compose_image(inpainted_image, corrected_texts, bounding_boxes)
+-    
++    corrected_texts: List[str] = [processor.correct_text(text, description, additional_prompt) for text, _ in bounding_boxes]
++
++    # Step 4: Integrate corrected text back into the image
++    final_image: Image.Image = processor.inpaint_image(uploaded_image, bounding_boxes, corrected_texts)
++
++    # Generate artistic text
++    artistic_text_image: Image.Image = processor.generate_artistic_text(additional_prompt)
++
+     # Ensure the output directory exists
+-    output_dir: str = 'mnt/data/generated'
++    output_dir: str = "mnt/data/generated"
+     os.makedirs(output_dir, exist_ok=True)
+-    
++
+     # Save the final image
+-    final_image_path: str = os.path.join(output_dir, 'example.png')
++    final_image_path: str = os.path.join(output_dir, "example2.png")
+     final_image.save(final_image_path)
+     final_image.show()
+ 
++    # Save the artistic text image
++    artistic_text_image_path: str = os.path.join(output_dir, "artistic_text.png")
++    artistic_text_image.save(artistic_text_image_path)
++    artistic_text_image.show()
++
+ if __name__ == "__main__":
+     additional_prompt = ""
+     if len(sys.argv) > 2:
+         additional_prompt = sys.argv[2]
+-    
+-    # Replace 'uploaded_image_path' with the actual path to the uploaded image
+-    process_image('mnt/data/source/example1.webp', additional_prompt)
++
++    process_image("mnt/data/source/example2.webp", additional_prompt)
+diff --git a/pyproject.toml b/pyproject.toml
+index e6b9ba5..0492161 100644
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -1,7 +1,7 @@
+ [tool.poetry]
+-name = "text-generation"
++name = "word2image-woai"
+ version = "0.1.0"
+-description = ""
++description = "Text Generation and Inpainting with Deep Learning This project integrates state-of-the-art deep learning models to perform comprehensive text detection, correction, and inpainting on input images. Utilizing models such as Idefics for image interpretation, ByT5 for text correction, and Stable Diffusion Inpainting for background restoration, this package provides a robust framework for enhancing and generating artistic images with corrected and contextually accurate text."
+ authors = ["Joao Rocha"]
+ license = "MIT"
+ readme = "README.md"
+@@ -10,14 +10,16 @@ readme = "README.md"
+ python = "^3.10"
+ easyocr = "^1.7.1"
+ pillow = "^10.3.0"
+-textblob = "^0.18.0.post0"
+ torch = "^2.3.0"
+ torchvision = "^0.18.0"
+ clip = {git = "https://github.com/openai/CLIP.git"}
+ diffusers = "^0.27.2"
+ transformers = "^4.40.2"
++tensorflow = "^2.6.0"
+ loguru = "^0.7.2"
+ accelerate = "^0.30.1"
++bitsandbytes = "^0.43.1"
++sentencepiece = "^0.1.96"
+ 
+ [tool.poetry.group.dev.dependencies]
+ pytest = "^8.2.0"
+diff --git a/requirements.txt b/requirements.txt
+index 250000d..630237c 100644
+--- a/requirements.txt
++++ b/requirements.txt
+@@ -1,10 +1,12 @@
+ easyocr
+ pillow
+-textblob
+ torch
+ torchvision
+ git+https://github.com/openai/CLIP.git 
+-diffusers
++tensorflow
+ transformers
+ loguru
+-accelerate
+\ No newline at end of file
++accelerate
++bitsandbytes
++sentencepiece
++
