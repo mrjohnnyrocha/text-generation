@@ -5,7 +5,7 @@ from typing import List, Tuple
 import numpy as np
 import torch
 from diffusers import StableDiffusionInpaintPipeline
-from transformers import IdeficsForVisionText2Text, IdeficsProcessor, T5Tokenizer, T5ForConditionalGeneration
+from transformers import IdeficsForVisionText2Text, IdeficsProcessor, ByT5Tokenizer, T5ForConditionalGeneration
 from scripts.logging import Logger
 
 logger = Logger()
@@ -28,11 +28,13 @@ class ImageProcessor:
 
     def interpret_image(self, image: Image.Image, additional_prompt: str = "") -> str:
         try:
-            image_tensor = self.processor(images=[image], return_tensors="pt").pixel_values.to(self.device)
-            prompts = [additional_prompt] if additional_prompt else ["Describe this image in detail."]
-            inputs = self.processor(prompts=prompts, return_tensors="pt").to(self.device)
-            generated_ids = self.model.generate(**inputs, pixel_values=image_tensor)
-            description = self.processor.batch_decode(generated_ids, skip_special_tokens=True)[0]
+            #image_tensor = self.processor(images=[image], return_tensors="pt").pixel_values.to(self.device)
+            #prompts = [additional_prompt] if additional_prompt else ["Describe this image in detail."]
+            #inputs = self.processor(prompts=prompts, return_tensors="pt").to(self.device)
+            #generated_ids = self.model.generate(**inputs, pixel_values=image_tensor)
+            #description = self.processor.batch_decode(generated_ids, skip_special_tokens=True)[0]
+
+            description = "A image full of text that needs to be corrected and restylized."
 
             logger.info("Image interpreted", extra={"description": description})
             return description
@@ -63,7 +65,7 @@ class ImageProcessor:
     def correct_text(self, text: str, description: str, additional_prompt: str) -> str:
         try:
             model_name = "google/byt5-small"
-            tokenizer = T5Tokenizer.from_pretrained(model_name)
+            tokenizer = ByT5Tokenizer.from_pretrained(model_name)
             model = T5ForConditionalGeneration.from_pretrained(model_name)
             
             context = f"{description}. {additional_prompt}."
@@ -121,6 +123,8 @@ class ImageProcessor:
                 image,
                 Image.fromarray((mask_np * 255).astype(np.uint8)).resize(image.size)
             )
+            self.output = final_image.convert("RGB")
+
             logger.info("Image inpainted with background maintained")
             return final_image
         except Exception as e:
@@ -138,9 +142,10 @@ class ImageProcessor:
             Image.Image: The generated artistic text as an image.
         """
         try:
-            text_image = self.if_pipeline(prompt=prompt)["sample"]
+#            text_image = self.if_pipeline(prompt=prompt)["sample"]
             logger.info("Artistic text generated", extra={"prompt": prompt})
-            return text_image
+            #return text_image
+            return self.output
         except Exception as e:
             logger.error("Failed to generate artistic text", extra={"error": str(e)})
             raise
